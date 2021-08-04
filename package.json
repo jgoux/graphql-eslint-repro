@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "lint": "eslint src"
+  },
   "devDependencies": {
     "@graphql-eslint/eslint-plugin": "^2.0.1",
     "eslint": "^7.32.0",
