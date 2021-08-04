@@ -1,0 +1,4047 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """measured in seconds"""
+  ttl: Int! = 60
+
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+"""
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
+type CannotUpdateOrgRole {
+  message: String!
+  type: String!
+}
+
+type CannotUpdateProjectRole {
+  message: String!
+  type: String!
+}
+
+union CreateFolderError = FolderAccessDenied | FolderDoesNotExists | InputValidationError
+
+type CreateFolderErrors {
+  errors: [CreateFolderError!]!
+}
+
+input CreateFolderInput {
+  name: String!
+  parentId: String!
+}
+
+union CreateFolderResult = CreateFolderErrors | CreateFolderSuccess
+
+type CreateFolderSuccess {
+  folder_id: uuid!
+}
+
+union CreateProjectError = InputValidationError
+
+type CreateProjectErrors {
+  errors: [CreateProjectError!]!
+}
+
+input CreateProjectInput {
+  description: String
+  end_date: timestamptz
+  name: String!
+  start_date: timestamptz
+}
+
+union CreateProjectResult = CreateProjectErrors | CreateProjectSuccess
+
+type CreateProjectSuccess {
+  project_id: uuid!
+}
+
+type FileAccessDenied {
+  message: String!
+  type: String!
+}
+
+type FileDoesNotExists {
+  message: String!
+  type: String!
+}
+
+type FolderAccessDenied {
+  message: String!
+  type: String!
+}
+
+type FolderDoesNotExists {
+  message: String!
+  type: String!
+}
+
+type InputValidationError {
+  fieldErrors: json!
+  formErrors: [String]!
+}
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+type OrgAccessDenied {
+  message: String!
+  type: String!
+}
+
+type OrgDoesNotExist {
+  message: String!
+  type: String!
+}
+
+union OrgInvitationsError = CannotUpdateOrgRole | InputValidationError | OrgAccessDenied
+
+type OrgInvitationsErrors {
+  errors: [OrgInvitationsError!]!
+}
+
+input OrgInvitationsInput {
+  org_id: uuid!
+  users: [usersOrgInvitation!]!
+}
+
+union OrgInvitationsResult = OrgInvitationsErrors | OrgInvitationsSuccess
+
+type OrgInvitationsSuccess {
+  ok: Boolean!
+}
+
+type ProjectAccessDenied {
+  message: String!
+  type: String!
+}
+
+type ProjectDoesNotExist {
+  message: String!
+  type: String!
+}
+
+union ProjectInvitationsError = CannotUpdateProjectRole | InputValidationError | ProjectAccessDenied
+
+type ProjectInvitationsErrors {
+  errors: [ProjectInvitationsError!]!
+}
+
+input ProjectInvitationsInput {
+  project_ids: [uuid!]!
+  users: [usersProjectInvitation!]!
+}
+
+union ProjectInvitationsResult = ProjectInvitationsErrors | ProjectInvitationsSuccess
+
+type ProjectInvitationsSuccess {
+  ok: Boolean!
+}
+
+union RenameFolderError = FolderAccessDenied | FolderDoesNotExists | InputValidationError
+
+type RenameFolderErrors {
+  errors: [RenameFolderError!]!
+}
+
+input RenameFolderInput {
+  folderId: String!
+  name: String!
+}
+
+union RenameFolderResult = RenameFolderErrors | RenameFolderSuccess
+
+type RenameFolderSuccess {
+  folder_id: uuid!
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+union UpdateEmailNotificationsError = InputValidationError
+
+type UpdateEmailNotificationsErrors {
+  errors: [UpdateEmailNotificationsError!]!
+}
+
+input UpdateEmailNotificationsInput {
+  hot_content_report: Boolean
+  invitation: Boolean
+  weekly_report: Boolean
+}
+
+union UpdateEmailNotificationsResult = UpdateEmailNotificationsErrors | UpdateEmailNotificationsSuccess
+
+type UpdateEmailNotificationsSuccess {
+  email_notifications_id: uuid!
+}
+
+union UpdateOrgProfileError = InputValidationError | OrgDoesNotExist | UpdateOrgProfilePermissionDenied
+
+type UpdateOrgProfileErrors {
+  errors: [UpdateOrgProfileError!]!
+}
+
+input UpdateOrgProfileInput {
+  description: String
+  id: ID!
+  legal_number: String
+  name: String
+  phone: String
+}
+
+type UpdateOrgProfilePermissionDenied {
+  message: String!
+  type: String!
+}
+
+union UpdateOrgProfileResult = UpdateOrgProfileErrors | UpdateOrgProfileSuccess
+
+type UpdateOrgProfileSuccess {
+  org_id: ID!
+}
+
+type UpdatePermissionFileSuccess {
+  file_id: uuid!
+}
+
+type UpdatePermissionFolderSuccess {
+  folder_id: uuid!
+}
+
+union UpdatePermissionsFileError = FileAccessDenied | FileDoesNotExists | InputValidationError
+
+type UpdatePermissionsFileErrors {
+  errors: [UpdatePermissionsFileError!]!
+}
+
+input UpdatePermissionsFileInput {
+  fileId: String!
+  orgs: [filePermission!]!
+  teams: [filePermission!]!
+  users: [filePermission!]!
+}
+
+union UpdatePermissionsFileResult = UpdatePermissionFileSuccess | UpdatePermissionsFileErrors
+
+union UpdatePermissionsFolderError = FolderAccessDenied | FolderDoesNotExists | InputValidationError
+
+type UpdatePermissionsFolderErrors {
+  errors: [UpdatePermissionsFolderError!]!
+}
+
+input UpdatePermissionsFolderInput {
+  folderId: String!
+  orgs: [folderPermission!]!
+  teams: [folderPermission!]!
+  users: [folderPermission!]!
+}
+
+union UpdatePermissionsFolderResult = UpdatePermissionFolderSuccess | UpdatePermissionsFolderErrors
+
+union UpdateProjectProfileError = InputValidationError | ProjectDoesNotExist | UpdateProjectProfilePermissionDenied
+
+type UpdateProjectProfileErrors {
+  errors: [UpdateProjectProfileError!]!
+}
+
+input UpdateProjectProfileInput {
+  contractor: String
+  description: String
+  end_date: timestamptz
+  id: ID!
+  is_archived: Boolean
+  name: String!
+  reference: String
+  start_date: timestamptz
+}
+
+type UpdateProjectProfilePermissionDenied {
+  message: String!
+  type: String!
+}
+
+union UpdateProjectProfileResult = UpdateProjectProfileErrors | UpdateProjectProfileSuccess
+
+type UpdateProjectProfileSuccess {
+  project_id: ID!
+}
+
+union UpdateUserProfileError = InputValidationError | UserDoesNotExist
+
+type UpdateUserProfileErrors {
+  errors: [UpdateUserProfileError!]!
+}
+
+input UpdateUserProfileInput {
+  first_name: String
+  language: String
+  last_name: String
+  phone: String
+}
+
+union UpdateUserProfileResult = UpdateUserProfileErrors | UpdateUserProfileSuccess
+
+type UpdateUserProfileSuccess {
+  ok: Boolean!
+  user_id: ID!
+}
+
+type UserDoesNotExist {
+  message: String!
+  type: String!
+}
+
+"""
+columns and relationships of "email_notifications"
+"""
+type email_notifications {
+  hot_content_report: Boolean!
+  id: uuid!
+  invitation: Boolean!
+  user_id: uuid!
+  weekly_report: Boolean!
+}
+
+"""
+Boolean expression to filter rows from the table "email_notifications". All fields are combined with a logical 'AND'.
+"""
+input email_notifications_bool_exp {
+  _and: [email_notifications_bool_exp!]
+  _not: email_notifications_bool_exp
+  _or: [email_notifications_bool_exp!]
+  hot_content_report: Boolean_comparison_exp
+  id: uuid_comparison_exp
+  invitation: Boolean_comparison_exp
+  user_id: uuid_comparison_exp
+  weekly_report: Boolean_comparison_exp
+}
+
+"""Ordering options when selecting data from "email_notifications"."""
+input email_notifications_order_by {
+  hot_content_report: order_by
+  id: order_by
+  invitation: order_by
+  user_id: order_by
+  weekly_report: order_by
+}
+
+"""
+select columns of table "email_notifications"
+"""
+enum email_notifications_select_column {
+  """column name"""
+  hot_content_report
+
+  """column name"""
+  id
+
+  """column name"""
+  invitation
+
+  """column name"""
+  user_id
+
+  """column name"""
+  weekly_report
+}
+
+input filePermission {
+  access: String!
+  id: uuid!
+}
+
+"""
+columns and relationships of "file_assignations"
+"""
+type file_assignations {
+  created_at: timestamptz!
+
+  """An object relationship"""
+  file: files!
+  file_id: uuid!
+  id: uuid!
+
+  """An array relationship"""
+  orgs(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_orgs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_orgs_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_orgs_bool_exp
+  ): [file_assignations_orgs!]!
+
+  """An array relationship"""
+  teams(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_teams_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_teams_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_teams_bool_exp
+  ): [file_assignations_teams!]!
+  updated_at: timestamptz!
+
+  """An array relationship"""
+  users(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_users_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_users_bool_exp
+  ): [file_assignations_users!]!
+}
+
+"""
+order by aggregate values of table "file_assignations"
+"""
+input file_assignations_aggregate_order_by {
+  count: order_by
+  max: file_assignations_max_order_by
+  min: file_assignations_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "file_assignations". All fields are combined with a logical 'AND'.
+"""
+input file_assignations_bool_exp {
+  _and: [file_assignations_bool_exp!]
+  _not: file_assignations_bool_exp
+  _or: [file_assignations_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  file: files_bool_exp
+  file_id: uuid_comparison_exp
+  id: uuid_comparison_exp
+  orgs: file_assignations_orgs_bool_exp
+  teams: file_assignations_teams_bool_exp
+  updated_at: timestamptz_comparison_exp
+  users: file_assignations_users_bool_exp
+}
+
+"""
+order by max() on columns of table "file_assignations"
+"""
+input file_assignations_max_order_by {
+  created_at: order_by
+  file_id: order_by
+  id: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "file_assignations"
+"""
+input file_assignations_min_order_by {
+  created_at: order_by
+  file_id: order_by
+  id: order_by
+  updated_at: order_by
+}
+
+"""Ordering options when selecting data from "file_assignations"."""
+input file_assignations_order_by {
+  created_at: order_by
+  file: files_order_by
+  file_id: order_by
+  id: order_by
+  orgs_aggregate: file_assignations_orgs_aggregate_order_by
+  teams_aggregate: file_assignations_teams_aggregate_order_by
+  updated_at: order_by
+  users_aggregate: file_assignations_users_aggregate_order_by
+}
+
+"""
+columns and relationships of "file_assignations_orgs"
+"""
+type file_assignations_orgs {
+  created_at: timestamptz!
+  file_assignation_id: uuid!
+
+  """An object relationship"""
+  file_assignee: file_assignations!
+  id: uuid!
+
+  """An object relationship"""
+  org: orgs!
+  org_id: uuid!
+  updated_at: timestamptz!
+}
+
+"""
+order by aggregate values of table "file_assignations_orgs"
+"""
+input file_assignations_orgs_aggregate_order_by {
+  count: order_by
+  max: file_assignations_orgs_max_order_by
+  min: file_assignations_orgs_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "file_assignations_orgs". All fields are combined with a logical 'AND'.
+"""
+input file_assignations_orgs_bool_exp {
+  _and: [file_assignations_orgs_bool_exp!]
+  _not: file_assignations_orgs_bool_exp
+  _or: [file_assignations_orgs_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  file_assignation_id: uuid_comparison_exp
+  file_assignee: file_assignations_bool_exp
+  id: uuid_comparison_exp
+  org: orgs_bool_exp
+  org_id: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+order by max() on columns of table "file_assignations_orgs"
+"""
+input file_assignations_orgs_max_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  id: order_by
+  org_id: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "file_assignations_orgs"
+"""
+input file_assignations_orgs_min_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  id: order_by
+  org_id: order_by
+  updated_at: order_by
+}
+
+"""Ordering options when selecting data from "file_assignations_orgs"."""
+input file_assignations_orgs_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  file_assignee: file_assignations_order_by
+  id: order_by
+  org: orgs_order_by
+  org_id: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "file_assignations_orgs"
+"""
+enum file_assignations_orgs_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  file_assignation_id
+
+  """column name"""
+  id
+
+  """column name"""
+  org_id
+
+  """column name"""
+  updated_at
+}
+
+"""
+select columns of table "file_assignations"
+"""
+enum file_assignations_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  file_id
+
+  """column name"""
+  id
+
+  """column name"""
+  updated_at
+}
+
+"""
+columns and relationships of "file_assignations_teams"
+"""
+type file_assignations_teams {
+  created_at: timestamptz!
+  file_assignation_id: uuid!
+
+  """An object relationship"""
+  file_assignee: file_assignations!
+  id: uuid!
+  team_id: uuid!
+  updated_at: timestamptz!
+}
+
+"""
+order by aggregate values of table "file_assignations_teams"
+"""
+input file_assignations_teams_aggregate_order_by {
+  count: order_by
+  max: file_assignations_teams_max_order_by
+  min: file_assignations_teams_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "file_assignations_teams". All fields are combined with a logical 'AND'.
+"""
+input file_assignations_teams_bool_exp {
+  _and: [file_assignations_teams_bool_exp!]
+  _not: file_assignations_teams_bool_exp
+  _or: [file_assignations_teams_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  file_assignation_id: uuid_comparison_exp
+  file_assignee: file_assignations_bool_exp
+  id: uuid_comparison_exp
+  team_id: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+order by max() on columns of table "file_assignations_teams"
+"""
+input file_assignations_teams_max_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  id: order_by
+  team_id: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "file_assignations_teams"
+"""
+input file_assignations_teams_min_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  id: order_by
+  team_id: order_by
+  updated_at: order_by
+}
+
+"""Ordering options when selecting data from "file_assignations_teams"."""
+input file_assignations_teams_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  file_assignee: file_assignations_order_by
+  id: order_by
+  team_id: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "file_assignations_teams"
+"""
+enum file_assignations_teams_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  file_assignation_id
+
+  """column name"""
+  id
+
+  """column name"""
+  team_id
+
+  """column name"""
+  updated_at
+}
+
+"""
+columns and relationships of "file_assignations_users"
+"""
+type file_assignations_users {
+  created_at: timestamptz!
+  file_assignation_id: uuid!
+
+  """An object relationship"""
+  file_assignee: file_assignations!
+  id: uuid!
+  updated_at: timestamptz!
+
+  """An object relationship"""
+  user: users!
+  user_id: uuid!
+}
+
+"""
+order by aggregate values of table "file_assignations_users"
+"""
+input file_assignations_users_aggregate_order_by {
+  count: order_by
+  max: file_assignations_users_max_order_by
+  min: file_assignations_users_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "file_assignations_users". All fields are combined with a logical 'AND'.
+"""
+input file_assignations_users_bool_exp {
+  _and: [file_assignations_users_bool_exp!]
+  _not: file_assignations_users_bool_exp
+  _or: [file_assignations_users_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  file_assignation_id: uuid_comparison_exp
+  file_assignee: file_assignations_bool_exp
+  id: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  user: users_bool_exp
+  user_id: uuid_comparison_exp
+}
+
+"""
+order by max() on columns of table "file_assignations_users"
+"""
+input file_assignations_users_max_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  id: order_by
+  updated_at: order_by
+  user_id: order_by
+}
+
+"""
+order by min() on columns of table "file_assignations_users"
+"""
+input file_assignations_users_min_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  id: order_by
+  updated_at: order_by
+  user_id: order_by
+}
+
+"""Ordering options when selecting data from "file_assignations_users"."""
+input file_assignations_users_order_by {
+  created_at: order_by
+  file_assignation_id: order_by
+  file_assignee: file_assignations_order_by
+  id: order_by
+  updated_at: order_by
+  user: users_order_by
+  user_id: order_by
+}
+
+"""
+select columns of table "file_assignations_users"
+"""
+enum file_assignations_users_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  file_assignation_id
+
+  """column name"""
+  id
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user_id
+}
+
+"""
+columns and relationships of "file_versions"
+"""
+type file_versions {
+  checksum: String!
+  content_type: String!
+  created_at: timestamptz!
+
+  """An object relationship"""
+  creator: users!
+  creator_id: uuid!
+  extension: String!
+
+  """An object relationship"""
+  file: files!
+  file_id: uuid!
+  id: uuid!
+  key_prefix: String!
+  name: String!
+  size: Int!
+  updated_at: timestamptz!
+}
+
+"""
+order by aggregate values of table "file_versions"
+"""
+input file_versions_aggregate_order_by {
+  avg: file_versions_avg_order_by
+  count: order_by
+  max: file_versions_max_order_by
+  min: file_versions_min_order_by
+  stddev: file_versions_stddev_order_by
+  stddev_pop: file_versions_stddev_pop_order_by
+  stddev_samp: file_versions_stddev_samp_order_by
+  sum: file_versions_sum_order_by
+  var_pop: file_versions_var_pop_order_by
+  var_samp: file_versions_var_samp_order_by
+  variance: file_versions_variance_order_by
+}
+
+"""
+order by avg() on columns of table "file_versions"
+"""
+input file_versions_avg_order_by {
+  size: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "file_versions". All fields are combined with a logical 'AND'.
+"""
+input file_versions_bool_exp {
+  _and: [file_versions_bool_exp!]
+  _not: file_versions_bool_exp
+  _or: [file_versions_bool_exp!]
+  checksum: String_comparison_exp
+  content_type: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  creator: users_bool_exp
+  creator_id: uuid_comparison_exp
+  extension: String_comparison_exp
+  file: files_bool_exp
+  file_id: uuid_comparison_exp
+  id: uuid_comparison_exp
+  key_prefix: String_comparison_exp
+  name: String_comparison_exp
+  size: Int_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+order by max() on columns of table "file_versions"
+"""
+input file_versions_max_order_by {
+  checksum: order_by
+  content_type: order_by
+  created_at: order_by
+  creator_id: order_by
+  extension: order_by
+  file_id: order_by
+  id: order_by
+  key_prefix: order_by
+  name: order_by
+  size: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "file_versions"
+"""
+input file_versions_min_order_by {
+  checksum: order_by
+  content_type: order_by
+  created_at: order_by
+  creator_id: order_by
+  extension: order_by
+  file_id: order_by
+  id: order_by
+  key_prefix: order_by
+  name: order_by
+  size: order_by
+  updated_at: order_by
+}
+
+"""Ordering options when selecting data from "file_versions"."""
+input file_versions_order_by {
+  checksum: order_by
+  content_type: order_by
+  created_at: order_by
+  creator: users_order_by
+  creator_id: order_by
+  extension: order_by
+  file: files_order_by
+  file_id: order_by
+  id: order_by
+  key_prefix: order_by
+  name: order_by
+  size: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "file_versions"
+"""
+enum file_versions_select_column {
+  """column name"""
+  checksum
+
+  """column name"""
+  content_type
+
+  """column name"""
+  created_at
+
+  """column name"""
+  creator_id
+
+  """column name"""
+  extension
+
+  """column name"""
+  file_id
+
+  """column name"""
+  id
+
+  """column name"""
+  key_prefix
+
+  """column name"""
+  name
+
+  """column name"""
+  size
+
+  """column name"""
+  updated_at
+}
+
+"""
+order by stddev() on columns of table "file_versions"
+"""
+input file_versions_stddev_order_by {
+  size: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "file_versions"
+"""
+input file_versions_stddev_pop_order_by {
+  size: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "file_versions"
+"""
+input file_versions_stddev_samp_order_by {
+  size: order_by
+}
+
+"""
+order by sum() on columns of table "file_versions"
+"""
+input file_versions_sum_order_by {
+  size: order_by
+}
+
+"""
+order by var_pop() on columns of table "file_versions"
+"""
+input file_versions_var_pop_order_by {
+  size: order_by
+}
+
+"""
+order by var_samp() on columns of table "file_versions"
+"""
+input file_versions_var_samp_order_by {
+  size: order_by
+}
+
+"""
+order by variance() on columns of table "file_versions"
+"""
+input file_versions_variance_order_by {
+  size: order_by
+}
+
+"""
+Save the WOPI information linked to a file
+
+
+columns and relationships of "file_wopi"
+
+"""
+type file_wopi {
+  created_at: timestamptz!
+
+  """An object relationship"""
+  file: files!
+  file_id: uuid!
+  id: uuid!
+  lock_expires_at: timestamptz!
+  lock_value: String!
+  updated_at: timestamptz!
+  version: Int!
+}
+
+"""
+order by aggregate values of table "file_wopi"
+"""
+input file_wopi_aggregate_order_by {
+  avg: file_wopi_avg_order_by
+  count: order_by
+  max: file_wopi_max_order_by
+  min: file_wopi_min_order_by
+  stddev: file_wopi_stddev_order_by
+  stddev_pop: file_wopi_stddev_pop_order_by
+  stddev_samp: file_wopi_stddev_samp_order_by
+  sum: file_wopi_sum_order_by
+  var_pop: file_wopi_var_pop_order_by
+  var_samp: file_wopi_var_samp_order_by
+  variance: file_wopi_variance_order_by
+}
+
+"""
+order by avg() on columns of table "file_wopi"
+"""
+input file_wopi_avg_order_by {
+  version: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "file_wopi". All fields are combined with a logical 'AND'.
+"""
+input file_wopi_bool_exp {
+  _and: [file_wopi_bool_exp!]
+  _not: file_wopi_bool_exp
+  _or: [file_wopi_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  file: files_bool_exp
+  file_id: uuid_comparison_exp
+  id: uuid_comparison_exp
+  lock_expires_at: timestamptz_comparison_exp
+  lock_value: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  version: Int_comparison_exp
+}
+
+"""
+order by max() on columns of table "file_wopi"
+"""
+input file_wopi_max_order_by {
+  created_at: order_by
+  file_id: order_by
+  id: order_by
+  lock_expires_at: order_by
+  lock_value: order_by
+  updated_at: order_by
+  version: order_by
+}
+
+"""
+order by min() on columns of table "file_wopi"
+"""
+input file_wopi_min_order_by {
+  created_at: order_by
+  file_id: order_by
+  id: order_by
+  lock_expires_at: order_by
+  lock_value: order_by
+  updated_at: order_by
+  version: order_by
+}
+
+"""Ordering options when selecting data from "file_wopi"."""
+input file_wopi_order_by {
+  created_at: order_by
+  file: files_order_by
+  file_id: order_by
+  id: order_by
+  lock_expires_at: order_by
+  lock_value: order_by
+  updated_at: order_by
+  version: order_by
+}
+
+"""
+select columns of table "file_wopi"
+"""
+enum file_wopi_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  file_id
+
+  """column name"""
+  id
+
+  """column name"""
+  lock_expires_at
+
+  """column name"""
+  lock_value
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  version
+}
+
+"""
+order by stddev() on columns of table "file_wopi"
+"""
+input file_wopi_stddev_order_by {
+  version: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "file_wopi"
+"""
+input file_wopi_stddev_pop_order_by {
+  version: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "file_wopi"
+"""
+input file_wopi_stddev_samp_order_by {
+  version: order_by
+}
+
+"""
+order by sum() on columns of table "file_wopi"
+"""
+input file_wopi_sum_order_by {
+  version: order_by
+}
+
+"""
+order by var_pop() on columns of table "file_wopi"
+"""
+input file_wopi_var_pop_order_by {
+  version: order_by
+}
+
+"""
+order by var_samp() on columns of table "file_wopi"
+"""
+input file_wopi_var_samp_order_by {
+  version: order_by
+}
+
+"""
+order by variance() on columns of table "file_wopi"
+"""
+input file_wopi_variance_order_by {
+  version: order_by
+}
+
+"""
+Table that define Files
+
+
+columns and relationships of "files"
+
+"""
+type files {
+  """An array relationship"""
+  assignations(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_bool_exp
+  ): [file_assignations!]!
+  created_at: timestamptz!
+  display_name: String!
+
+  """
+  A computed field, executes function "get_file_extension"
+  """
+  extension: String
+
+  """An object relationship"""
+  folder: folders!
+  id: uuid!
+  parent_id: uuid!
+  updated_at: timestamptz!
+
+  """An array relationship"""
+  versions(
+    """distinct select on columns"""
+    distinct_on: [file_versions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_versions_order_by!]
+
+    """filter the rows returned"""
+    where: file_versions_bool_exp
+  ): [file_versions!]!
+
+  """An array relationship"""
+  wopis(
+    """distinct select on columns"""
+    distinct_on: [file_wopi_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_wopi_order_by!]
+
+    """filter the rows returned"""
+    where: file_wopi_bool_exp
+  ): [file_wopi!]!
+}
+
+"""
+order by aggregate values of table "files"
+"""
+input files_aggregate_order_by {
+  count: order_by
+  max: files_max_order_by
+  min: files_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "files". All fields are combined with a logical 'AND'.
+"""
+input files_bool_exp {
+  _and: [files_bool_exp!]
+  _not: files_bool_exp
+  _or: [files_bool_exp!]
+  assignations: file_assignations_bool_exp
+  created_at: timestamptz_comparison_exp
+  display_name: String_comparison_exp
+  extension: String_comparison_exp
+  folder: folders_bool_exp
+  id: uuid_comparison_exp
+  parent_id: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  versions: file_versions_bool_exp
+  wopis: file_wopi_bool_exp
+}
+
+"""
+order by max() on columns of table "files"
+"""
+input files_max_order_by {
+  created_at: order_by
+  display_name: order_by
+  id: order_by
+  parent_id: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "files"
+"""
+input files_min_order_by {
+  created_at: order_by
+  display_name: order_by
+  id: order_by
+  parent_id: order_by
+  updated_at: order_by
+}
+
+"""Ordering options when selecting data from "files"."""
+input files_order_by {
+  assignations_aggregate: file_assignations_aggregate_order_by
+  created_at: order_by
+  display_name: order_by
+  folder: folders_order_by
+  id: order_by
+  parent_id: order_by
+  updated_at: order_by
+  versions_aggregate: file_versions_aggregate_order_by
+  wopis_aggregate: file_wopi_aggregate_order_by
+}
+
+"""
+select columns of table "files"
+"""
+enum files_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  display_name
+
+  """column name"""
+  id
+
+  """column name"""
+  parent_id
+
+  """column name"""
+  updated_at
+}
+
+scalar float8
+
+"""
+Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'.
+"""
+input float8_comparison_exp {
+  _eq: float8
+  _gt: float8
+  _gte: float8
+  _in: [float8!]
+  _is_null: Boolean
+  _lt: float8
+  _lte: float8
+  _neq: float8
+  _nin: [float8!]
+}
+
+input folderPermission {
+  access: String!
+  id: uuid!
+}
+
+"""
+Table of folders
+
+
+columns and relationships of "folders"
+
+"""
+type folders {
+  created_at: timestamptz!
+
+  """An array relationship"""
+  files(
+    """distinct select on columns"""
+    distinct_on: [files_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [files_order_by!]
+
+    """filter the rows returned"""
+    where: files_bool_exp
+  ): [files!]!
+
+  """
+  fetch data from the table: "folders"
+  """
+  folders(
+    """distinct select on columns"""
+    distinct_on: [folders_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [folders_order_by!]
+
+    """filter the rows returned"""
+    where: folders_bool_exp
+  ): [folders!]!
+  id: uuid!
+  name: String!
+
+  """An object relationship"""
+  parent: folders
+  parent_id: uuid
+
+  """An array relationship"""
+  projects(
+    """distinct select on columns"""
+    distinct_on: [folders_to_projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [folders_to_projects_order_by!]
+
+    """filter the rows returned"""
+    where: folders_to_projects_bool_exp
+  ): [folders_to_projects!]!
+
+  """
+  A computed field, executes function "get_folder_pwd"
+  """
+  pwd(
+    """distinct select on columns"""
+    distinct_on: [t_folder_pwd_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [t_folder_pwd_order_by!]
+
+    """filter the rows returned"""
+    where: t_folder_pwd_bool_exp
+  ): [t_folder_pwd!]
+  updated_at: timestamptz!
+}
+
+"""
+order by aggregate values of table "folders"
+"""
+input folders_aggregate_order_by {
+  count: order_by
+  max: folders_max_order_by
+  min: folders_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "folders". All fields are combined with a logical 'AND'.
+"""
+input folders_bool_exp {
+  _and: [folders_bool_exp!]
+  _not: folders_bool_exp
+  _or: [folders_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  files: files_bool_exp
+  folders: folders_bool_exp
+  id: uuid_comparison_exp
+  name: String_comparison_exp
+  parent: folders_bool_exp
+  parent_id: uuid_comparison_exp
+  projects: folders_to_projects_bool_exp
+  pwd: t_folder_pwd_bool_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+order by max() on columns of table "folders"
+"""
+input folders_max_order_by {
+  created_at: order_by
+  id: order_by
+  name: order_by
+  parent_id: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "folders"
+"""
+input folders_min_order_by {
+  created_at: order_by
+  id: order_by
+  name: order_by
+  parent_id: order_by
+  updated_at: order_by
+}
+
+"""Ordering options when selecting data from "folders"."""
+input folders_order_by {
+  created_at: order_by
+  files_aggregate: files_aggregate_order_by
+  folders_aggregate: folders_aggregate_order_by
+  id: order_by
+  name: order_by
+  parent: folders_order_by
+  parent_id: order_by
+  projects_aggregate: folders_to_projects_aggregate_order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "folders"
+"""
+enum folders_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  name
+
+  """column name"""
+  parent_id
+
+  """column name"""
+  updated_at
+}
+
+"""
+Relationship table between folder and project
+
+
+columns and relationships of "folders_to_projects"
+
+"""
+type folders_to_projects {
+  created_at: timestamptz!
+
+  """An object relationship"""
+  folder: folders!
+  folder_id: uuid!
+  id: uuid!
+
+  """An object relationship"""
+  project: projects!
+  project_id: uuid!
+  updated_at: timestamptz!
+}
+
+"""
+order by aggregate values of table "folders_to_projects"
+"""
+input folders_to_projects_aggregate_order_by {
+  count: order_by
+  max: folders_to_projects_max_order_by
+  min: folders_to_projects_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "folders_to_projects". All fields are combined with a logical 'AND'.
+"""
+input folders_to_projects_bool_exp {
+  _and: [folders_to_projects_bool_exp!]
+  _not: folders_to_projects_bool_exp
+  _or: [folders_to_projects_bool_exp!]
+  created_at: timestamptz_comparison_exp
+  folder: folders_bool_exp
+  folder_id: uuid_comparison_exp
+  id: uuid_comparison_exp
+  project: projects_bool_exp
+  project_id: uuid_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+order by max() on columns of table "folders_to_projects"
+"""
+input folders_to_projects_max_order_by {
+  created_at: order_by
+  folder_id: order_by
+  id: order_by
+  project_id: order_by
+  updated_at: order_by
+}
+
+"""
+order by min() on columns of table "folders_to_projects"
+"""
+input folders_to_projects_min_order_by {
+  created_at: order_by
+  folder_id: order_by
+  id: order_by
+  project_id: order_by
+  updated_at: order_by
+}
+
+"""Ordering options when selecting data from "folders_to_projects"."""
+input folders_to_projects_order_by {
+  created_at: order_by
+  folder: folders_order_by
+  folder_id: order_by
+  id: order_by
+  project: projects_order_by
+  project_id: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "folders_to_projects"
+"""
+enum folders_to_projects_select_column {
+  """column name"""
+  created_at
+
+  """column name"""
+  folder_id
+
+  """column name"""
+  id
+
+  """column name"""
+  project_id
+
+  """column name"""
+  updated_at
+}
+
+scalar json
+
+"""mutation root"""
+type mutation_root {
+  createFolder(input: CreateFolderInput!): CreateFolderResult
+  createProject(input: CreateProjectInput!): CreateProjectResult
+  orgInvitations(input: OrgInvitationsInput!): OrgInvitationsResult
+  projectInvitations(input: ProjectInvitationsInput!): ProjectInvitationsResult
+  renameFolder(input: RenameFolderInput!): RenameFolderResult
+  updateEmailNotifications(input: UpdateEmailNotificationsInput!): UpdateEmailNotificationsResult
+  updateOrgProfile(input: UpdateOrgProfileInput!): UpdateOrgProfileResult
+  updatePermissionsFile(input: UpdatePermissionsFileInput!): UpdatePermissionsFileResult
+  updatePermissionsFolder(input: UpdatePermissionsFolderInput!): UpdatePermissionsFolderResult
+  updateProjectProfile(input: UpdateProjectProfileInput!): UpdateProjectProfileResult
+  updateUserProfile(input: UpdateUserProfileInput!): UpdateUserProfileResult
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+"""
+columns and relationships of "org_roles"
+"""
+type org_roles {
+  name: String!
+
+  """An array relationship"""
+  orgs_to_users(
+    """distinct select on columns"""
+    distinct_on: [orgs_to_users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [orgs_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: orgs_to_users_bool_exp
+  ): [orgs_to_users!]!
+}
+
+"""
+Boolean expression to filter rows from the table "org_roles". All fields are combined with a logical 'AND'.
+"""
+input org_roles_bool_exp {
+  _and: [org_roles_bool_exp!]
+  _not: org_roles_bool_exp
+  _or: [org_roles_bool_exp!]
+  name: String_comparison_exp
+  orgs_to_users: orgs_to_users_bool_exp
+}
+
+"""Ordering options when selecting data from "org_roles"."""
+input org_roles_order_by {
+  name: order_by
+  orgs_to_users_aggregate: orgs_to_users_aggregate_order_by
+}
+
+"""
+select columns of table "org_roles"
+"""
+enum org_roles_select_column {
+  """column name"""
+  name
+}
+
+"""
+columns and relationships of "orgs"
+"""
+type orgs {
+  description: String
+  id: uuid!
+  legal_number: String
+
+  """An array relationship"""
+  members(
+    """distinct select on columns"""
+    distinct_on: [orgs_to_users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [orgs_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: orgs_to_users_bool_exp
+  ): [orgs_to_users!]!
+  name: String!
+  phone: String
+}
+
+"""
+Boolean expression to filter rows from the table "orgs". All fields are combined with a logical 'AND'.
+"""
+input orgs_bool_exp {
+  _and: [orgs_bool_exp!]
+  _not: orgs_bool_exp
+  _or: [orgs_bool_exp!]
+  description: String_comparison_exp
+  id: uuid_comparison_exp
+  legal_number: String_comparison_exp
+  members: orgs_to_users_bool_exp
+  name: String_comparison_exp
+  phone: String_comparison_exp
+}
+
+"""Ordering options when selecting data from "orgs"."""
+input orgs_order_by {
+  description: order_by
+  id: order_by
+  legal_number: order_by
+  members_aggregate: orgs_to_users_aggregate_order_by
+  name: order_by
+  phone: order_by
+}
+
+"""
+select columns of table "orgs"
+"""
+enum orgs_select_column {
+  """column name"""
+  description
+
+  """column name"""
+  id
+
+  """column name"""
+  legal_number
+
+  """column name"""
+  name
+
+  """column name"""
+  phone
+}
+
+"""
+columns and relationships of "orgs_to_users"
+"""
+type orgs_to_users {
+  """An object relationship"""
+  inviter: users
+  is_active: Boolean!
+
+  """An object relationship"""
+  org: orgs!
+
+  """An object relationship"""
+  role: org_roles!
+
+  """An object relationship"""
+  user: users!
+}
+
+"""
+order by aggregate values of table "orgs_to_users"
+"""
+input orgs_to_users_aggregate_order_by {
+  count: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "orgs_to_users". All fields are combined with a logical 'AND'.
+"""
+input orgs_to_users_bool_exp {
+  _and: [orgs_to_users_bool_exp!]
+  _not: orgs_to_users_bool_exp
+  _or: [orgs_to_users_bool_exp!]
+  inviter: users_bool_exp
+  is_active: Boolean_comparison_exp
+  org: orgs_bool_exp
+  role: org_roles_bool_exp
+  user: users_bool_exp
+}
+
+"""Ordering options when selecting data from "orgs_to_users"."""
+input orgs_to_users_order_by {
+  inviter: users_order_by
+  is_active: order_by
+  org: orgs_order_by
+  role: org_roles_order_by
+  user: users_order_by
+}
+
+"""
+select columns of table "orgs_to_users"
+"""
+enum orgs_to_users_select_column {
+  """column name"""
+  is_active
+}
+
+"""
+Address of a project
+
+
+columns and relationships of "project_address"
+
+"""
+type project_address {
+  administrative_area_level1: String
+  administrative_area_level2: String
+  city: String
+  country: String
+  created_at: timestamptz!
+  lat: float8
+  lng: float8
+  postal_code: String
+
+  """An object relationship"""
+  project: projects!
+  project_id: uuid!
+  street: String
+  updated_at: timestamptz!
+}
+
+"""
+Boolean expression to filter rows from the table "project_address". All fields are combined with a logical 'AND'.
+"""
+input project_address_bool_exp {
+  _and: [project_address_bool_exp!]
+  _not: project_address_bool_exp
+  _or: [project_address_bool_exp!]
+  administrative_area_level1: String_comparison_exp
+  administrative_area_level2: String_comparison_exp
+  city: String_comparison_exp
+  country: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  lat: float8_comparison_exp
+  lng: float8_comparison_exp
+  postal_code: String_comparison_exp
+  project: projects_bool_exp
+  project_id: uuid_comparison_exp
+  street: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""Ordering options when selecting data from "project_address"."""
+input project_address_order_by {
+  administrative_area_level1: order_by
+  administrative_area_level2: order_by
+  city: order_by
+  country: order_by
+  created_at: order_by
+  lat: order_by
+  lng: order_by
+  postal_code: order_by
+  project: projects_order_by
+  project_id: order_by
+  street: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "project_address"
+"""
+enum project_address_select_column {
+  """column name"""
+  administrative_area_level1
+
+  """column name"""
+  administrative_area_level2
+
+  """column name"""
+  city
+
+  """column name"""
+  country
+
+  """column name"""
+  created_at
+
+  """column name"""
+  lat
+
+  """column name"""
+  lng
+
+  """column name"""
+  postal_code
+
+  """column name"""
+  project_id
+
+  """column name"""
+  street
+
+  """column name"""
+  updated_at
+}
+
+"""
+columns and relationships of "project_roles"
+"""
+type project_roles {
+  name: String!
+
+  """An array relationship"""
+  projects_to_users(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: projects_to_users_bool_exp
+  ): [projects_to_users!]!
+}
+
+"""
+Boolean expression to filter rows from the table "project_roles". All fields are combined with a logical 'AND'.
+"""
+input project_roles_bool_exp {
+  _and: [project_roles_bool_exp!]
+  _not: project_roles_bool_exp
+  _or: [project_roles_bool_exp!]
+  name: String_comparison_exp
+  projects_to_users: projects_to_users_bool_exp
+}
+
+"""Ordering options when selecting data from "project_roles"."""
+input project_roles_order_by {
+  name: order_by
+  projects_to_users_aggregate: projects_to_users_aggregate_order_by
+}
+
+"""
+select columns of table "project_roles"
+"""
+enum project_roles_select_column {
+  """column name"""
+  name
+}
+
+"""
+columns and relationships of "projects"
+"""
+type projects {
+  """An object relationship"""
+  address: project_address!
+  contractor: String
+  created_at: timestamptz!
+  description: String
+  end_date: timestamptz
+
+  """An array relationship"""
+  folders(
+    """distinct select on columns"""
+    distinct_on: [folders_to_projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [folders_to_projects_order_by!]
+
+    """filter the rows returned"""
+    where: folders_to_projects_bool_exp
+  ): [folders_to_projects!]!
+  id: uuid!
+  is_archived: Boolean!
+  is_demo: Boolean!
+
+  """An array relationship"""
+  members(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: projects_to_users_bool_exp
+  ): [projects_to_users!]!
+  name: String!
+  reference: String
+
+  """
+  A computed field, executes function "project_root_folder_id"
+  """
+  root_folder_id: uuid
+  start_date: timestamptz
+  updated_at: timestamptz!
+}
+
+"""
+Boolean expression to filter rows from the table "projects". All fields are combined with a logical 'AND'.
+"""
+input projects_bool_exp {
+  _and: [projects_bool_exp!]
+  _not: projects_bool_exp
+  _or: [projects_bool_exp!]
+  address: project_address_bool_exp
+  contractor: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  description: String_comparison_exp
+  end_date: timestamptz_comparison_exp
+  folders: folders_to_projects_bool_exp
+  id: uuid_comparison_exp
+  is_archived: Boolean_comparison_exp
+  is_demo: Boolean_comparison_exp
+  members: projects_to_users_bool_exp
+  name: String_comparison_exp
+  reference: String_comparison_exp
+  root_folder_id: uuid_comparison_exp
+  start_date: timestamptz_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""Ordering options when selecting data from "projects"."""
+input projects_order_by {
+  address: project_address_order_by
+  contractor: order_by
+  created_at: order_by
+  description: order_by
+  end_date: order_by
+  folders_aggregate: folders_to_projects_aggregate_order_by
+  id: order_by
+  is_archived: order_by
+  is_demo: order_by
+  members_aggregate: projects_to_users_aggregate_order_by
+  name: order_by
+  reference: order_by
+  start_date: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "projects"
+"""
+enum projects_select_column {
+  """column name"""
+  contractor
+
+  """column name"""
+  created_at
+
+  """column name"""
+  description
+
+  """column name"""
+  end_date
+
+  """column name"""
+  id
+
+  """column name"""
+  is_archived
+
+  """column name"""
+  is_demo
+
+  """column name"""
+  name
+
+  """column name"""
+  reference
+
+  """column name"""
+  start_date
+
+  """column name"""
+  updated_at
+}
+
+"""
+columns and relationships of "projects_to_users"
+"""
+type projects_to_users {
+  """An object relationship"""
+  inviter: users
+
+  """An object relationship"""
+  project: projects!
+
+  """An object relationship"""
+  role: project_roles!
+
+  """An object relationship"""
+  user: users!
+}
+
+"""
+order by aggregate values of table "projects_to_users"
+"""
+input projects_to_users_aggregate_order_by {
+  count: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "projects_to_users". All fields are combined with a logical 'AND'.
+"""
+input projects_to_users_bool_exp {
+  _and: [projects_to_users_bool_exp!]
+  _not: projects_to_users_bool_exp
+  _or: [projects_to_users_bool_exp!]
+  inviter: users_bool_exp
+  project: projects_bool_exp
+  role: project_roles_bool_exp
+  user: users_bool_exp
+}
+
+"""Ordering options when selecting data from "projects_to_users"."""
+input projects_to_users_order_by {
+  inviter: users_order_by
+  project: projects_order_by
+  role: project_roles_order_by
+  user: users_order_by
+}
+
+type query_root {
+  """
+  fetch data from the table: "email_notifications"
+  """
+  email_notifications(
+    """distinct select on columns"""
+    distinct_on: [email_notifications_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [email_notifications_order_by!]
+
+    """filter the rows returned"""
+    where: email_notifications_bool_exp
+  ): [email_notifications!]!
+
+  """
+  fetch data from the table: "email_notifications" using primary key columns
+  """
+  email_notifications_by_pk(id: uuid!): email_notifications
+
+  """
+  fetch data from the table: "file_assignations"
+  """
+  file_assignations(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_bool_exp
+  ): [file_assignations!]!
+
+  """
+  fetch data from the table: "file_assignations" using primary key columns
+  """
+  file_assignations_by_pk(id: uuid!): file_assignations
+
+  """
+  fetch data from the table: "file_assignations_orgs"
+  """
+  file_assignations_orgs(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_orgs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_orgs_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_orgs_bool_exp
+  ): [file_assignations_orgs!]!
+
+  """
+  fetch data from the table: "file_assignations_orgs" using primary key columns
+  """
+  file_assignations_orgs_by_pk(id: uuid!): file_assignations_orgs
+
+  """
+  fetch data from the table: "file_assignations_teams"
+  """
+  file_assignations_teams(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_teams_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_teams_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_teams_bool_exp
+  ): [file_assignations_teams!]!
+
+  """
+  fetch data from the table: "file_assignations_teams" using primary key columns
+  """
+  file_assignations_teams_by_pk(id: uuid!): file_assignations_teams
+
+  """
+  fetch data from the table: "file_assignations_users"
+  """
+  file_assignations_users(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_users_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_users_bool_exp
+  ): [file_assignations_users!]!
+
+  """
+  fetch data from the table: "file_assignations_users" using primary key columns
+  """
+  file_assignations_users_by_pk(id: uuid!): file_assignations_users
+
+  """
+  fetch data from the table: "file_versions"
+  """
+  file_versions(
+    """distinct select on columns"""
+    distinct_on: [file_versions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_versions_order_by!]
+
+    """filter the rows returned"""
+    where: file_versions_bool_exp
+  ): [file_versions!]!
+
+  """fetch data from the table: "file_versions" using primary key columns"""
+  file_versions_by_pk(id: uuid!): file_versions
+
+  """
+  fetch data from the table: "file_wopi"
+  """
+  file_wopi(
+    """distinct select on columns"""
+    distinct_on: [file_wopi_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_wopi_order_by!]
+
+    """filter the rows returned"""
+    where: file_wopi_bool_exp
+  ): [file_wopi!]!
+
+  """fetch data from the table: "file_wopi" using primary key columns"""
+  file_wopi_by_pk(id: uuid!): file_wopi
+
+  """An array relationship"""
+  files(
+    """distinct select on columns"""
+    distinct_on: [files_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [files_order_by!]
+
+    """filter the rows returned"""
+    where: files_bool_exp
+  ): [files!]!
+
+  """fetch data from the table: "files" using primary key columns"""
+  files_by_pk(id: uuid!): files
+
+  """
+  fetch data from the table: "folders"
+  """
+  folders(
+    """distinct select on columns"""
+    distinct_on: [folders_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [folders_order_by!]
+
+    """filter the rows returned"""
+    where: folders_bool_exp
+  ): [folders!]!
+
+  """fetch data from the table: "folders" using primary key columns"""
+  folders_by_pk(id: uuid!): folders
+
+  """
+  fetch data from the table: "folders_to_projects"
+  """
+  folders_to_projects(
+    """distinct select on columns"""
+    distinct_on: [folders_to_projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [folders_to_projects_order_by!]
+
+    """filter the rows returned"""
+    where: folders_to_projects_bool_exp
+  ): [folders_to_projects!]!
+
+  """
+  fetch data from the table: "folders_to_projects" using primary key columns
+  """
+  folders_to_projects_by_pk(id: uuid!): folders_to_projects
+  ok: Boolean!
+
+  """
+  fetch data from the table: "org_roles"
+  """
+  org_roles(
+    """distinct select on columns"""
+    distinct_on: [org_roles_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [org_roles_order_by!]
+
+    """filter the rows returned"""
+    where: org_roles_bool_exp
+  ): [org_roles!]!
+
+  """fetch data from the table: "org_roles" using primary key columns"""
+  org_roles_by_pk(name: String!): org_roles
+
+  """
+  fetch data from the table: "orgs"
+  """
+  orgs(
+    """distinct select on columns"""
+    distinct_on: [orgs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [orgs_order_by!]
+
+    """filter the rows returned"""
+    where: orgs_bool_exp
+  ): [orgs!]!
+
+  """fetch data from the table: "orgs" using primary key columns"""
+  orgs_by_pk(id: uuid!): orgs
+
+  """An array relationship"""
+  orgs_to_users(
+    """distinct select on columns"""
+    distinct_on: [orgs_to_users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [orgs_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: orgs_to_users_bool_exp
+  ): [orgs_to_users!]!
+
+  """
+  fetch data from the table: "project_address"
+  """
+  project_address(
+    """distinct select on columns"""
+    distinct_on: [project_address_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [project_address_order_by!]
+
+    """filter the rows returned"""
+    where: project_address_bool_exp
+  ): [project_address!]!
+
+  """fetch data from the table: "project_address" using primary key columns"""
+  project_address_by_pk(project_id: uuid!): project_address
+
+  """
+  fetch data from the table: "project_roles"
+  """
+  project_roles(
+    """distinct select on columns"""
+    distinct_on: [project_roles_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [project_roles_order_by!]
+
+    """filter the rows returned"""
+    where: project_roles_bool_exp
+  ): [project_roles!]!
+
+  """fetch data from the table: "project_roles" using primary key columns"""
+  project_roles_by_pk(name: String!): project_roles
+
+  """
+  fetch data from the table: "projects"
+  """
+  projects(
+    """distinct select on columns"""
+    distinct_on: [projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_order_by!]
+
+    """filter the rows returned"""
+    where: projects_bool_exp
+  ): [projects!]!
+
+  """fetch data from the table: "projects" using primary key columns"""
+  projects_by_pk(id: uuid!): projects
+
+  """An array relationship"""
+  projects_to_users(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: projects_to_users_bool_exp
+  ): [projects_to_users!]!
+
+  """
+  fetch data from the table: "t_folder_pwd"
+  """
+  t_folder_pwd(
+    """distinct select on columns"""
+    distinct_on: [t_folder_pwd_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [t_folder_pwd_order_by!]
+
+    """filter the rows returned"""
+    where: t_folder_pwd_bool_exp
+  ): [t_folder_pwd!]!
+
+  """fetch data from the table: "t_folder_pwd" using primary key columns"""
+  t_folder_pwd_by_pk(id: uuid!): t_folder_pwd
+
+  """
+  fetch data from the table: "user_connections"
+  """
+  user_connections(
+    """distinct select on columns"""
+    distinct_on: [user_connections_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_connections_order_by!]
+
+    """filter the rows returned"""
+    where: user_connections_bool_exp
+  ): [user_connections!]!
+
+  """
+  fetch data from the table: "user_connections" using primary key columns
+  """
+  user_connections_by_pk(id: uuid!): user_connections
+
+  """
+  fetch data from the table: "user_contact"
+  """
+  user_contact(
+    """distinct select on columns"""
+    distinct_on: [user_contact_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_contact_order_by!]
+
+    """filter the rows returned"""
+    where: user_contact_bool_exp
+  ): [user_contact!]!
+
+  """An array relationship"""
+  user_locations(
+    """distinct select on columns"""
+    distinct_on: [user_locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_locations_order_by!]
+
+    """filter the rows returned"""
+    where: user_locations_bool_exp
+  ): [user_locations!]!
+
+  """fetch data from the table: "user_locations" using primary key columns"""
+  user_locations_by_pk(id: uuid!): user_locations
+
+  """
+  fetch data from the table: "users"
+  """
+  users(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): [users!]!
+
+  """
+  fetch data from the table: "users_active_org"
+  """
+  users_active_org(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_active_org_order_by!]
+
+    """filter the rows returned"""
+    where: users_active_org_bool_exp
+  ): [users_active_org!]!
+
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(id: uuid!): users
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "email_notifications"
+  """
+  email_notifications(
+    """distinct select on columns"""
+    distinct_on: [email_notifications_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [email_notifications_order_by!]
+
+    """filter the rows returned"""
+    where: email_notifications_bool_exp
+  ): [email_notifications!]!
+
+  """
+  fetch data from the table: "email_notifications" using primary key columns
+  """
+  email_notifications_by_pk(id: uuid!): email_notifications
+
+  """
+  fetch data from the table: "file_assignations"
+  """
+  file_assignations(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_bool_exp
+  ): [file_assignations!]!
+
+  """
+  fetch data from the table: "file_assignations" using primary key columns
+  """
+  file_assignations_by_pk(id: uuid!): file_assignations
+
+  """
+  fetch data from the table: "file_assignations_orgs"
+  """
+  file_assignations_orgs(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_orgs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_orgs_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_orgs_bool_exp
+  ): [file_assignations_orgs!]!
+
+  """
+  fetch data from the table: "file_assignations_orgs" using primary key columns
+  """
+  file_assignations_orgs_by_pk(id: uuid!): file_assignations_orgs
+
+  """
+  fetch data from the table: "file_assignations_teams"
+  """
+  file_assignations_teams(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_teams_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_teams_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_teams_bool_exp
+  ): [file_assignations_teams!]!
+
+  """
+  fetch data from the table: "file_assignations_teams" using primary key columns
+  """
+  file_assignations_teams_by_pk(id: uuid!): file_assignations_teams
+
+  """
+  fetch data from the table: "file_assignations_users"
+  """
+  file_assignations_users(
+    """distinct select on columns"""
+    distinct_on: [file_assignations_users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_assignations_users_order_by!]
+
+    """filter the rows returned"""
+    where: file_assignations_users_bool_exp
+  ): [file_assignations_users!]!
+
+  """
+  fetch data from the table: "file_assignations_users" using primary key columns
+  """
+  file_assignations_users_by_pk(id: uuid!): file_assignations_users
+
+  """
+  fetch data from the table: "file_versions"
+  """
+  file_versions(
+    """distinct select on columns"""
+    distinct_on: [file_versions_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_versions_order_by!]
+
+    """filter the rows returned"""
+    where: file_versions_bool_exp
+  ): [file_versions!]!
+
+  """fetch data from the table: "file_versions" using primary key columns"""
+  file_versions_by_pk(id: uuid!): file_versions
+
+  """
+  fetch data from the table: "file_wopi"
+  """
+  file_wopi(
+    """distinct select on columns"""
+    distinct_on: [file_wopi_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [file_wopi_order_by!]
+
+    """filter the rows returned"""
+    where: file_wopi_bool_exp
+  ): [file_wopi!]!
+
+  """fetch data from the table: "file_wopi" using primary key columns"""
+  file_wopi_by_pk(id: uuid!): file_wopi
+
+  """An array relationship"""
+  files(
+    """distinct select on columns"""
+    distinct_on: [files_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [files_order_by!]
+
+    """filter the rows returned"""
+    where: files_bool_exp
+  ): [files!]!
+
+  """fetch data from the table: "files" using primary key columns"""
+  files_by_pk(id: uuid!): files
+
+  """
+  fetch data from the table: "folders"
+  """
+  folders(
+    """distinct select on columns"""
+    distinct_on: [folders_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [folders_order_by!]
+
+    """filter the rows returned"""
+    where: folders_bool_exp
+  ): [folders!]!
+
+  """fetch data from the table: "folders" using primary key columns"""
+  folders_by_pk(id: uuid!): folders
+
+  """
+  fetch data from the table: "folders_to_projects"
+  """
+  folders_to_projects(
+    """distinct select on columns"""
+    distinct_on: [folders_to_projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [folders_to_projects_order_by!]
+
+    """filter the rows returned"""
+    where: folders_to_projects_bool_exp
+  ): [folders_to_projects!]!
+
+  """
+  fetch data from the table: "folders_to_projects" using primary key columns
+  """
+  folders_to_projects_by_pk(id: uuid!): folders_to_projects
+
+  """
+  fetch data from the table: "org_roles"
+  """
+  org_roles(
+    """distinct select on columns"""
+    distinct_on: [org_roles_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [org_roles_order_by!]
+
+    """filter the rows returned"""
+    where: org_roles_bool_exp
+  ): [org_roles!]!
+
+  """fetch data from the table: "org_roles" using primary key columns"""
+  org_roles_by_pk(name: String!): org_roles
+
+  """
+  fetch data from the table: "orgs"
+  """
+  orgs(
+    """distinct select on columns"""
+    distinct_on: [orgs_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [orgs_order_by!]
+
+    """filter the rows returned"""
+    where: orgs_bool_exp
+  ): [orgs!]!
+
+  """fetch data from the table: "orgs" using primary key columns"""
+  orgs_by_pk(id: uuid!): orgs
+
+  """An array relationship"""
+  orgs_to_users(
+    """distinct select on columns"""
+    distinct_on: [orgs_to_users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [orgs_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: orgs_to_users_bool_exp
+  ): [orgs_to_users!]!
+
+  """
+  fetch data from the table: "project_address"
+  """
+  project_address(
+    """distinct select on columns"""
+    distinct_on: [project_address_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [project_address_order_by!]
+
+    """filter the rows returned"""
+    where: project_address_bool_exp
+  ): [project_address!]!
+
+  """fetch data from the table: "project_address" using primary key columns"""
+  project_address_by_pk(project_id: uuid!): project_address
+
+  """
+  fetch data from the table: "project_roles"
+  """
+  project_roles(
+    """distinct select on columns"""
+    distinct_on: [project_roles_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [project_roles_order_by!]
+
+    """filter the rows returned"""
+    where: project_roles_bool_exp
+  ): [project_roles!]!
+
+  """fetch data from the table: "project_roles" using primary key columns"""
+  project_roles_by_pk(name: String!): project_roles
+
+  """
+  fetch data from the table: "projects"
+  """
+  projects(
+    """distinct select on columns"""
+    distinct_on: [projects_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_order_by!]
+
+    """filter the rows returned"""
+    where: projects_bool_exp
+  ): [projects!]!
+
+  """fetch data from the table: "projects" using primary key columns"""
+  projects_by_pk(id: uuid!): projects
+
+  """An array relationship"""
+  projects_to_users(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: projects_to_users_bool_exp
+  ): [projects_to_users!]!
+
+  """
+  fetch data from the table: "t_folder_pwd"
+  """
+  t_folder_pwd(
+    """distinct select on columns"""
+    distinct_on: [t_folder_pwd_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [t_folder_pwd_order_by!]
+
+    """filter the rows returned"""
+    where: t_folder_pwd_bool_exp
+  ): [t_folder_pwd!]!
+
+  """fetch data from the table: "t_folder_pwd" using primary key columns"""
+  t_folder_pwd_by_pk(id: uuid!): t_folder_pwd
+
+  """
+  fetch data from the table: "user_connections"
+  """
+  user_connections(
+    """distinct select on columns"""
+    distinct_on: [user_connections_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_connections_order_by!]
+
+    """filter the rows returned"""
+    where: user_connections_bool_exp
+  ): [user_connections!]!
+
+  """
+  fetch data from the table: "user_connections" using primary key columns
+  """
+  user_connections_by_pk(id: uuid!): user_connections
+
+  """
+  fetch data from the table: "user_contact"
+  """
+  user_contact(
+    """distinct select on columns"""
+    distinct_on: [user_contact_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_contact_order_by!]
+
+    """filter the rows returned"""
+    where: user_contact_bool_exp
+  ): [user_contact!]!
+
+  """An array relationship"""
+  user_locations(
+    """distinct select on columns"""
+    distinct_on: [user_locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_locations_order_by!]
+
+    """filter the rows returned"""
+    where: user_locations_bool_exp
+  ): [user_locations!]!
+
+  """fetch data from the table: "user_locations" using primary key columns"""
+  user_locations_by_pk(id: uuid!): user_locations
+
+  """
+  fetch data from the table: "users"
+  """
+  users(
+    """distinct select on columns"""
+    distinct_on: [users_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_order_by!]
+
+    """filter the rows returned"""
+    where: users_bool_exp
+  ): [users!]!
+
+  """
+  fetch data from the table: "users_active_org"
+  """
+  users_active_org(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [users_active_org_order_by!]
+
+    """filter the rows returned"""
+    where: users_active_org_bool_exp
+  ): [users_active_org!]!
+
+  """fetch data from the table: "users" using primary key columns"""
+  users_by_pk(id: uuid!): users
+}
+
+"""
+Empty table to have type into folders->pwd
+
+
+columns and relationships of "t_folder_pwd"
+
+"""
+type t_folder_pwd {
+  id: uuid!
+  level: Int!
+  name: String!
+}
+
+"""
+Boolean expression to filter rows from the table "t_folder_pwd". All fields are combined with a logical 'AND'.
+"""
+input t_folder_pwd_bool_exp {
+  _and: [t_folder_pwd_bool_exp!]
+  _not: t_folder_pwd_bool_exp
+  _or: [t_folder_pwd_bool_exp!]
+  id: uuid_comparison_exp
+  level: Int_comparison_exp
+  name: String_comparison_exp
+}
+
+"""Ordering options when selecting data from "t_folder_pwd"."""
+input t_folder_pwd_order_by {
+  id: order_by
+  level: order_by
+  name: order_by
+}
+
+"""
+select columns of table "t_folder_pwd"
+"""
+enum t_folder_pwd_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  level
+
+  """column name"""
+  name
+}
+
+scalar timestamptz
+
+"""
+Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'.
+"""
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
+}
+
+"""
+columns and relationships of "user_connections"
+"""
+type user_connections {
+  browser_name: String
+  browser_version: String
+  cpu: String
+  created_at: timestamptz!
+  device_model: String
+  device_type: String
+  device_vendor: String
+  engine_name: String
+  engine_version: String
+  id: uuid!
+  ip: String!
+  os_name: String
+  os_version: String
+  updated_at: timestamptz!
+
+  """An object relationship"""
+  user: users!
+  user_id: uuid!
+
+  """An array relationship"""
+  user_locations(
+    """distinct select on columns"""
+    distinct_on: [user_locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_locations_order_by!]
+
+    """filter the rows returned"""
+    where: user_locations_bool_exp
+  ): [user_locations!]!
+}
+
+"""
+order by aggregate values of table "user_connections"
+"""
+input user_connections_aggregate_order_by {
+  count: order_by
+  max: user_connections_max_order_by
+  min: user_connections_min_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "user_connections". All fields are combined with a logical 'AND'.
+"""
+input user_connections_bool_exp {
+  _and: [user_connections_bool_exp!]
+  _not: user_connections_bool_exp
+  _or: [user_connections_bool_exp!]
+  browser_name: String_comparison_exp
+  browser_version: String_comparison_exp
+  cpu: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  device_model: String_comparison_exp
+  device_type: String_comparison_exp
+  device_vendor: String_comparison_exp
+  engine_name: String_comparison_exp
+  engine_version: String_comparison_exp
+  id: uuid_comparison_exp
+  ip: String_comparison_exp
+  os_name: String_comparison_exp
+  os_version: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  user: users_bool_exp
+  user_id: uuid_comparison_exp
+  user_locations: user_locations_bool_exp
+}
+
+"""
+order by max() on columns of table "user_connections"
+"""
+input user_connections_max_order_by {
+  browser_name: order_by
+  browser_version: order_by
+  cpu: order_by
+  created_at: order_by
+  device_model: order_by
+  device_type: order_by
+  device_vendor: order_by
+  engine_name: order_by
+  engine_version: order_by
+  id: order_by
+  ip: order_by
+  os_name: order_by
+  os_version: order_by
+  updated_at: order_by
+  user_id: order_by
+}
+
+"""
+order by min() on columns of table "user_connections"
+"""
+input user_connections_min_order_by {
+  browser_name: order_by
+  browser_version: order_by
+  cpu: order_by
+  created_at: order_by
+  device_model: order_by
+  device_type: order_by
+  device_vendor: order_by
+  engine_name: order_by
+  engine_version: order_by
+  id: order_by
+  ip: order_by
+  os_name: order_by
+  os_version: order_by
+  updated_at: order_by
+  user_id: order_by
+}
+
+"""Ordering options when selecting data from "user_connections"."""
+input user_connections_order_by {
+  browser_name: order_by
+  browser_version: order_by
+  cpu: order_by
+  created_at: order_by
+  device_model: order_by
+  device_type: order_by
+  device_vendor: order_by
+  engine_name: order_by
+  engine_version: order_by
+  id: order_by
+  ip: order_by
+  os_name: order_by
+  os_version: order_by
+  updated_at: order_by
+  user: users_order_by
+  user_id: order_by
+  user_locations_aggregate: user_locations_aggregate_order_by
+}
+
+"""
+select columns of table "user_connections"
+"""
+enum user_connections_select_column {
+  """column name"""
+  browser_name
+
+  """column name"""
+  browser_version
+
+  """column name"""
+  cpu
+
+  """column name"""
+  created_at
+
+  """column name"""
+  device_model
+
+  """column name"""
+  device_type
+
+  """column name"""
+  device_vendor
+
+  """column name"""
+  engine_name
+
+  """column name"""
+  engine_version
+
+  """column name"""
+  id
+
+  """column name"""
+  ip
+
+  """column name"""
+  os_name
+
+  """column name"""
+  os_version
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user_id
+}
+
+"""
+columns and relationships of "user_contact"
+"""
+type user_contact {
+  email: String
+  id: uuid
+  phone: String
+
+  """An object relationship"""
+  user: users
+}
+
+"""
+Boolean expression to filter rows from the table "user_contact". All fields are combined with a logical 'AND'.
+"""
+input user_contact_bool_exp {
+  _and: [user_contact_bool_exp!]
+  _not: user_contact_bool_exp
+  _or: [user_contact_bool_exp!]
+  email: String_comparison_exp
+  id: uuid_comparison_exp
+  phone: String_comparison_exp
+  user: users_bool_exp
+}
+
+"""Ordering options when selecting data from "user_contact"."""
+input user_contact_order_by {
+  email: order_by
+  id: order_by
+  phone: order_by
+  user: users_order_by
+}
+
+"""
+select columns of table "user_contact"
+"""
+enum user_contact_select_column {
+  """column name"""
+  email
+
+  """column name"""
+  id
+
+  """column name"""
+  phone
+}
+
+"""
+columns and relationships of "user_locations"
+"""
+type user_locations {
+  city_name: String
+  continent_code: String
+  country_code: String
+  country_code3: String
+  country_name: String
+  created_at: timestamptz!
+  id: uuid!
+  latitude: float8
+  longitude: float8
+  time_zone: String
+  updated_at: timestamptz!
+
+  """An object relationship"""
+  user: users!
+
+  """An object relationship"""
+  user_connection: user_connections!
+  user_connection_id: uuid!
+  user_id: uuid!
+}
+
+"""
+order by aggregate values of table "user_locations"
+"""
+input user_locations_aggregate_order_by {
+  avg: user_locations_avg_order_by
+  count: order_by
+  max: user_locations_max_order_by
+  min: user_locations_min_order_by
+  stddev: user_locations_stddev_order_by
+  stddev_pop: user_locations_stddev_pop_order_by
+  stddev_samp: user_locations_stddev_samp_order_by
+  sum: user_locations_sum_order_by
+  var_pop: user_locations_var_pop_order_by
+  var_samp: user_locations_var_samp_order_by
+  variance: user_locations_variance_order_by
+}
+
+"""
+order by avg() on columns of table "user_locations"
+"""
+input user_locations_avg_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "user_locations". All fields are combined with a logical 'AND'.
+"""
+input user_locations_bool_exp {
+  _and: [user_locations_bool_exp!]
+  _not: user_locations_bool_exp
+  _or: [user_locations_bool_exp!]
+  city_name: String_comparison_exp
+  continent_code: String_comparison_exp
+  country_code: String_comparison_exp
+  country_code3: String_comparison_exp
+  country_name: String_comparison_exp
+  created_at: timestamptz_comparison_exp
+  id: uuid_comparison_exp
+  latitude: float8_comparison_exp
+  longitude: float8_comparison_exp
+  time_zone: String_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  user: users_bool_exp
+  user_connection: user_connections_bool_exp
+  user_connection_id: uuid_comparison_exp
+  user_id: uuid_comparison_exp
+}
+
+"""
+order by max() on columns of table "user_locations"
+"""
+input user_locations_max_order_by {
+  city_name: order_by
+  continent_code: order_by
+  country_code: order_by
+  country_code3: order_by
+  country_name: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  time_zone: order_by
+  updated_at: order_by
+  user_connection_id: order_by
+  user_id: order_by
+}
+
+"""
+order by min() on columns of table "user_locations"
+"""
+input user_locations_min_order_by {
+  city_name: order_by
+  continent_code: order_by
+  country_code: order_by
+  country_code3: order_by
+  country_name: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  time_zone: order_by
+  updated_at: order_by
+  user_connection_id: order_by
+  user_id: order_by
+}
+
+"""Ordering options when selecting data from "user_locations"."""
+input user_locations_order_by {
+  city_name: order_by
+  continent_code: order_by
+  country_code: order_by
+  country_code3: order_by
+  country_name: order_by
+  created_at: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  time_zone: order_by
+  updated_at: order_by
+  user: users_order_by
+  user_connection: user_connections_order_by
+  user_connection_id: order_by
+  user_id: order_by
+}
+
+"""
+select columns of table "user_locations"
+"""
+enum user_locations_select_column {
+  """column name"""
+  city_name
+
+  """column name"""
+  continent_code
+
+  """column name"""
+  country_code
+
+  """column name"""
+  country_code3
+
+  """column name"""
+  country_name
+
+  """column name"""
+  created_at
+
+  """column name"""
+  id
+
+  """column name"""
+  latitude
+
+  """column name"""
+  longitude
+
+  """column name"""
+  time_zone
+
+  """column name"""
+  updated_at
+
+  """column name"""
+  user_connection_id
+
+  """column name"""
+  user_id
+}
+
+"""
+order by stddev() on columns of table "user_locations"
+"""
+input user_locations_stddev_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "user_locations"
+"""
+input user_locations_stddev_pop_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "user_locations"
+"""
+input user_locations_stddev_samp_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+order by sum() on columns of table "user_locations"
+"""
+input user_locations_sum_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+order by var_pop() on columns of table "user_locations"
+"""
+input user_locations_var_pop_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+order by var_samp() on columns of table "user_locations"
+"""
+input user_locations_var_samp_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+order by variance() on columns of table "user_locations"
+"""
+input user_locations_variance_order_by {
+  latitude: order_by
+  longitude: order_by
+}
+
+"""
+columns and relationships of "users"
+"""
+type users {
+  """An object relationship"""
+  active_org: users_active_org
+  auth0_id: String!
+
+  """An array relationship"""
+  connections(
+    """distinct select on columns"""
+    distinct_on: [user_connections_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_connections_order_by!]
+
+    """filter the rows returned"""
+    where: user_connections_bool_exp
+  ): [user_connections!]!
+
+  """An object relationship"""
+  contact: user_contact
+  created_at: timestamptz!
+  deleted_at: timestamptz
+
+  """An object relationship"""
+  email_notifications: email_notifications
+  first_name: String!
+
+  """
+  A computed field, executes function "user_full_name"
+  """
+  full_name: String
+  id: uuid!
+  is_active: Boolean!
+  is_connected: Boolean!
+  language: String
+  last_name: String!
+
+  """An array relationship"""
+  locations(
+    """distinct select on columns"""
+    distinct_on: [user_locations_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [user_locations_order_by!]
+
+    """filter the rows returned"""
+    where: user_locations_bool_exp
+  ): [user_locations!]!
+
+  """An array relationship"""
+  projects(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: projects_to_users_bool_exp
+  ): [projects_to_users!]!
+
+  """An array relationship"""
+  projects_invited(
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [projects_to_users_order_by!]
+
+    """filter the rows returned"""
+    where: projects_to_users_bool_exp
+  ): [projects_to_users!]!
+  updated_at: timestamptz!
+}
+
+input usersOrgInvitation {
+  email: String!
+  firstName: String
+  lastName: String
+  phone: String
+  role: String
+}
+
+input usersProjectInvitation {
+  email: String!
+  firstName: String
+  lastName: String
+  phone: String
+  role: String
+}
+
+"""
+columns and relationships of "users_active_org"
+"""
+type users_active_org {
+  """An object relationship"""
+  org: orgs
+
+  """An object relationship"""
+  role: org_roles
+}
+
+"""
+Boolean expression to filter rows from the table "users_active_org". All fields are combined with a logical 'AND'.
+"""
+input users_active_org_bool_exp {
+  _and: [users_active_org_bool_exp!]
+  _not: users_active_org_bool_exp
+  _or: [users_active_org_bool_exp!]
+  org: orgs_bool_exp
+  role: org_roles_bool_exp
+}
+
+"""Ordering options when selecting data from "users_active_org"."""
+input users_active_org_order_by {
+  org: orgs_order_by
+  role: org_roles_order_by
+}
+
+"""
+Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'.
+"""
+input users_bool_exp {
+  _and: [users_bool_exp!]
+  _not: users_bool_exp
+  _or: [users_bool_exp!]
+  active_org: users_active_org_bool_exp
+  auth0_id: String_comparison_exp
+  connections: user_connections_bool_exp
+  contact: user_contact_bool_exp
+  created_at: timestamptz_comparison_exp
+  deleted_at: timestamptz_comparison_exp
+  email_notifications: email_notifications_bool_exp
+  first_name: String_comparison_exp
+  full_name: String_comparison_exp
+  id: uuid_comparison_exp
+  is_active: Boolean_comparison_exp
+  is_connected: Boolean_comparison_exp
+  language: String_comparison_exp
+  last_name: String_comparison_exp
+  locations: user_locations_bool_exp
+  projects: projects_to_users_bool_exp
+  projects_invited: projects_to_users_bool_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""Ordering options when selecting data from "users"."""
+input users_order_by {
+  active_org: users_active_org_order_by
+  auth0_id: order_by
+  connections_aggregate: user_connections_aggregate_order_by
+  contact: user_contact_order_by
+  created_at: order_by
+  deleted_at: order_by
+  email_notifications: email_notifications_order_by
+  first_name: order_by
+  id: order_by
+  is_active: order_by
+  is_connected: order_by
+  language: order_by
+  last_name: order_by
+  locations_aggregate: user_locations_aggregate_order_by
+  projects_aggregate: projects_to_users_aggregate_order_by
+  projects_invited_aggregate: projects_to_users_aggregate_order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "users"
+"""
+enum users_select_column {
+  """column name"""
+  auth0_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  deleted_at
+
+  """column name"""
+  first_name
+
+  """column name"""
+  id
+
+  """column name"""
+  is_active
+
+  """column name"""
+  is_connected
+
+  """column name"""
+  language
+
+  """column name"""
+  last_name
+
+  """column name"""
+  updated_at
+}
+
+scalar uuid
+
+"""
+Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
+"""
+input uuid_comparison_exp {
+  _eq: uuid
+  _gt: uuid
+  _gte: uuid
+  _in: [uuid!]
+  _is_null: Boolean
+  _lt: uuid
+  _lte: uuid
+  _neq: uuid
+  _nin: [uuid!]
+}

@@ -1,0 +1,4 @@
+fragment ProfileForm_user on users {
+  first_name
+  last_name
+}

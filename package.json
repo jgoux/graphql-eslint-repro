@@ -1,0 +1,11 @@
+{
+  "name": "graphql-eslint-repro-unknown-fragments",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@graphql-eslint/eslint-plugin": "^2.0.1",
+    "eslint": "^7.32.0",
+    "graphql": "^15.5.1"
+  }
+}
