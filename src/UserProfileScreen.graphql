@@ -1,3 +1,4 @@
+#import "./ProfileForm.graphql"
 query UserProfileScreen_user($id: uuid!) {
   users_by_pk(id: $id) {
     ...ProfileForm_user
